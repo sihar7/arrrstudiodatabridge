@@ -135,6 +135,7 @@ const en = {
     allGood: "Configuration looks good.",
     issues: {
       SAME_DATASTORE: "Source and destination are the same DataStore.",
+      TYPE_MISMATCH: "Source and destination must be the same type (Standard or Ordered).",
       SAME_UNIVERSE: "Same experience — places already share DataStores. Copy only if the name, scope or structure changes.",
       CONNECTION_INACTIVE: "A connection isn’t active",
       NO_UNIVERSE_ACCESS: "The connection has no access to this experience",
@@ -416,6 +417,7 @@ const id: FeaturesDict = {
     allGood: "Konfigurasi aman.",
     issues: {
       SAME_DATASTORE: "Sumber dan tujuan adalah DataStore yang sama.",
+      TYPE_MISMATCH: "Sumber dan tujuan harus bertipe sama (Standard atau Ordered).",
       SAME_UNIVERSE: "Experience sama — place sudah berbagi DataStore. Salin hanya jika nama, scope, atau struktur berubah.",
       CONNECTION_INACTIVE: "Ada koneksi yang tidak aktif",
       NO_UNIVERSE_ACCESS: "Koneksi tidak punya akses ke experience ini",

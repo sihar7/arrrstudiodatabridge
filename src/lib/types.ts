@@ -46,7 +46,7 @@ export type DatastoreConfig = {
   placeId: string | null;
   datastoreName: string;
   scope: string;
-  datastoreType: "standard";
+  datastoreType: "standard" | "ordered";
   createdAt: string;
   connection: { id: string; name: string; status: ConnectionStatus };
 };

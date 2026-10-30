@@ -155,7 +155,7 @@ export default function ProjectDetailPage() {
                   <span className="flex flex-col gap-1">
                     <span className="text-body-sm font-medium">{c.label}</span>
                     <span className="flex flex-wrap gap-1.5">
-                      <Tag tone="neutral">{d.standard}</Tag>
+                      <Tag tone="neutral">{c.datastoreType === "ordered" ? "Ordered" : d.standard}</Tag>
                       {sharedUniverses.has(c.universeId) && <Tag tone="violet">{d.sameUniverse}</Tag>}
                     </span>
                   </span>

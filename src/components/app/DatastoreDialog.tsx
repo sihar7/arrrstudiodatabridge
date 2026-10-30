@@ -25,6 +25,7 @@ export default function DatastoreDialog({ projectId, onClose, onSaved }: { proje
   const [placeId, setPlaceId] = useState("");
   const [resolving, setResolving] = useState(false);
   const [datastoreName, setDatastoreName] = useState("");
+  const [datastoreType, setDatastoreType] = useState<DatastoreConfig["datastoreType"]>("standard");
   const [stores, setStores] = useState<{ items: Store[]; next: string | null; loading: boolean; error: string | null } | null>(null);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -100,7 +101,7 @@ export default function DatastoreDialog({ projectId, onClose, onSaved }: { proje
           placeId: placeId || null,
           datastoreName,
           scope: String(form.get("scope") || "global"),
-          datastoreType: "standard",
+          datastoreType,
         },
       });
       const conn = connections?.find((c) => c.id === connectionId);
@@ -241,17 +242,20 @@ export default function DatastoreDialog({ projectId, onClose, onSaved }: { proje
           </fieldset>
 
           <div className="flex flex-col gap-2">
-            <Field label={d.datastore} error={fields.datastoreName}>
+            <Field label={d.datastore} hint={datastoreType === "ordered" ? d.orderedHint : undefined} error={fields.datastoreName}>
               {(id, desc) => (
                 <div className="flex gap-2">
                   <Input id={id} mono required maxLength={50} value={datastoreName} onChange={(e) => setDatastoreName(e.target.value)} aria-describedby={desc} />
-                  <Button type="button" variant="secondary" icon={<Search className="size-4" aria-hidden="true" />} onClick={() => browse()} disabled={!universeId || !connectionId}>
-                    {d.browse}
-                  </Button>
+                  {/* Roblox tidak menyediakan daftar Ordered DataStore → telusuri hanya untuk Standard */}
+                  {datastoreType === "standard" && (
+                    <Button type="button" variant="secondary" icon={<Search className="size-4" aria-hidden="true" />} onClick={() => browse()} disabled={!universeId || !connectionId}>
+                      {d.browse}
+                    </Button>
+                  )}
                 </div>
               )}
             </Field>
-            {stores && (
+            {stores && datastoreType === "standard" && (
               <div className="overflow-hidden rounded-md border border-line">
                 {stores.error ? (
                   <p className="px-3 py-3 text-body-sm text-danger">{stores.error}</p>
@@ -294,11 +298,9 @@ export default function DatastoreDialog({ projectId, onClose, onSaved }: { proje
             </Field>
             <Field label={d.type}>
               {(id) => (
-                <Select id={id} defaultValue="standard">
+                <Select id={id} value={datastoreType} onChange={(e) => setDatastoreType(e.target.value as DatastoreConfig["datastoreType"])}>
                   <option value="standard">{d.standard}</option>
-                  <option value="ordered" disabled>
-                    {d.ordered}
-                  </option>
+                  <option value="ordered">{d.ordered}</option>
                 </Select>
               )}
             </Field>
