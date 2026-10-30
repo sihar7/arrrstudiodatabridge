@@ -56,7 +56,7 @@ function Connections() {
         subtitle={c.subtitle}
         actions={
           manage &&
-          (providers.roblox ? (
+          (providers.robloxConnect ? (
             <>
               <Button variant="ghost" icon={<Plus className="size-4" aria-hidden="true" />} onClick={() => setDialog({ mode: "create" })}>
                 {f.roblox.apiKeyAlt}
@@ -87,14 +87,14 @@ function Connections() {
           action={
             manage && (
               <div className="flex flex-col items-center gap-3">
-                {providers.roblox && (
+                {providers.robloxConnect && (
                   <>
                     <RobloxButton href={connectHref} label={f.roblox.connect} variant="primary" />
                     <p className="max-w-sm text-caption text-fg-3">{f.roblox.connectBody}</p>
                   </>
                 )}
-                <Button variant={providers.roblox ? "ghost" : "primary"} icon={<Plus className="size-4" aria-hidden="true" />} onClick={() => setDialog({ mode: "create" })}>
-                  {providers.roblox ? f.roblox.apiKeyAlt : c.add}
+                <Button variant={providers.robloxConnect ? "ghost" : "primary"} icon={<Plus className="size-4" aria-hidden="true" />} onClick={() => setDialog({ mode: "create" })}>
+                  {providers.robloxConnect ? f.roblox.apiKeyAlt : c.add}
                 </Button>
               </div>
             )

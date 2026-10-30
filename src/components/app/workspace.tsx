@@ -13,7 +13,7 @@ type Ctx = {
   can: (p: Permission) => boolean;
   switchWorkspace: (id: string) => void;
   refreshMe: () => Promise<void>;
-  providers: { roblox: boolean };
+  providers: { roblox: boolean; robloxConnect: boolean };
 };
 
 const WorkspaceContext = createContext<Ctx | null>(null);
@@ -24,7 +24,7 @@ export function useWorkspace() {
   return ctx;
 }
 
-export function WorkspaceProvider({ initialMe, activeId, providers, children }: { initialMe: Me; activeId: string; providers: { roblox: boolean }; children: ReactNode }) {
+export function WorkspaceProvider({ initialMe, activeId, providers, children }: { initialMe: Me; activeId: string; providers: { roblox: boolean; robloxConnect: boolean }; children: ReactNode }) {
   const router = useRouter();
   const [me, setMe] = useState(initialMe);
   const [currentId, setCurrentId] = useState(activeId);

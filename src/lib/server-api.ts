@@ -24,12 +24,13 @@ export async function getWorkspaceCookie(): Promise<string | null> {
 }
 
 /** Penyedia login aktif (tombol Roblox hanya tampil bila app OAuth dikonfigurasi di API). */
-export async function getProviders(): Promise<{ roblox: boolean }> {
+export async function getProviders(): Promise<{ roblox: boolean; robloxConnect: boolean }> {
   try {
     const res = await fetch(`${API}/api/v1/auth/providers`, { cache: "no-store" });
-    if (!res.ok) return { roblox: false };
-    return ((await res.json()) as { data: { roblox: boolean } }).data;
+    if (!res.ok) return { roblox: false, robloxConnect: false };
+    const d = ((await res.json()) as { data: { roblox: boolean; robloxConnect?: boolean } }).data;
+    return { roblox: d.roblox, robloxConnect: !!d.robloxConnect };
   } catch {
-    return { roblox: false };
+    return { roblox: false, robloxConnect: false };
   }
 }

@@ -22,6 +22,7 @@ const en = {
   },
   oauthErrors: {
     ROBLOX_DISABLED: "Roblox sign-in isn’t configured yet.",
+    ROBLOX_CONNECT_DISABLED: "Connect with Roblox isn’t available yet — add an Open Cloud API key instead.",
     ROBLOX_DENIED: "Roblox authorization was cancelled.",
     OAUTH_STATE: "The sign-in link expired. Try again.",
     ROBLOX_OAUTH_FAILED: "Roblox couldn’t complete the sign-in. Try again.",
@@ -262,6 +263,7 @@ const id: FeaturesDict = {
   },
   oauthErrors: {
     ROBLOX_DISABLED: "Masuk dengan Roblox belum dikonfigurasi.",
+    ROBLOX_CONNECT_DISABLED: "Hubungkan dengan Roblox belum tersedia — tambahkan API key Open Cloud.",
     ROBLOX_DENIED: "Otorisasi Roblox dibatalkan.",
     OAUTH_STATE: "Tautan masuk kedaluwarsa. Coba lagi.",
     ROBLOX_OAUTH_FAILED: "Roblox gagal menyelesaikan proses masuk. Coba lagi.",
