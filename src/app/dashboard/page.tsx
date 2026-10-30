@@ -75,7 +75,7 @@ export default function OverviewPage() {
         <div className="grid gap-3 sm:grid-cols-3">
           <QuickAction href="/dashboard/connections?new=1" icon={<CloudSync />} title={o.connect} body={o.connectBody} />
           <QuickAction href="/dashboard/projects?new=1" icon={<Folder />} title={o.newProject} body={o.newProjectBody} />
-          <QuickAction icon={<DataTransferBoth />} title={o.createMigration} body={o.createMigrationBody} soon={t.common.soon} />
+          <QuickAction href="/dashboard/migrations/new" icon={<DataTransferBoth />} title={o.createMigration} body={o.createMigrationBody} />
         </div>
       </section>
 

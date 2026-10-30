@@ -43,7 +43,7 @@ export const compareGroups: Group[] = [
       { label: { en: "Backup storage", id: "Penyimpanan backup" }, values: { free: "—", developer: "5 GB", studio: "50 GB", enterprise: custom } },
       { label: { en: "Backup retention", id: "Retensi backup" }, values: { free: "—", developer: { en: "30 days", id: "30 hari" }, studio: { en: "90 days", id: "90 hari" }, enterprise: custom } },
       { label: { en: "Scheduled backups", id: "Backup terjadwal" }, values: { free: false, developer: false, studio: "soon", enterprise: "soon" } },
-      { label: { en: "Data explorer (read-only)", id: "Data explorer (hanya-baca)" }, values: { free: "soon", developer: "soon", studio: "soon", enterprise: "soon" } },
+      { label: { en: "Data explorer (read-only)", id: "Data explorer (hanya-baca)" }, values: { free: true, developer: true, studio: true, enterprise: true } },
     ],
   },
   {

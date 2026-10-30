@@ -67,7 +67,7 @@ const en = {
       { label: "Safety", title: "Dry run first", body: "Simulate every migration without a single write, then review conflicts before anything moves.", soon: false },
       { label: "Safety", title: "Migration verification", body: "Each written key is read back and compared, so “done” means verified — not assumed.", soon: false },
       { label: "Data", title: "Secure backup & restore", body: "Independent JSONL snapshots with manifest and checksum, restorable to the target you choose.", soon: true },
-      { label: "Data", title: "Advanced data explorer", body: "Browse scopes and keys, inspect JSON and metadata, export entries. Read-only by design.", soon: true },
+      { label: "Data", title: "Advanced data explorer", body: "Browse scopes and keys, inspect JSON and metadata, export entries. Read-only by design." },
     ],
     howTitle: "Four steps. No scripts in your game.",
     how: [
@@ -382,7 +382,7 @@ const id: Dict = {
       { label: "Keamanan", title: "Dry run dulu", body: "Simulasikan migrasi tanpa satu pun penulisan, lalu tinjau konflik sebelum data dipindah.", soon: false },
       { label: "Keamanan", title: "Verifikasi migrasi", body: "Setiap key yang ditulis dibaca ulang dan dibandingkan — “selesai” berarti terverifikasi.", soon: false },
       { label: "Data", title: "Backup & restore aman", body: "Snapshot JSONL independen dengan manifest dan checksum, bisa di-restore ke target pilihanmu.", soon: true },
-      { label: "Data", title: "Data explorer", body: "Telusuri scope dan key, periksa JSON dan metadata, ekspor entry. Hanya-baca.", soon: true },
+      { label: "Data", title: "Data explorer", body: "Telusuri scope dan key, periksa JSON dan metadata, ekspor entry. Hanya-baca." },
     ],
     howTitle: "Empat langkah. Tanpa script di game.",
     how: [

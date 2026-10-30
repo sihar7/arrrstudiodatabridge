@@ -23,7 +23,6 @@ const en: DocPage[] = [
       { type: "list", items: ["Owner or group permission to create Open Cloud API keys for the experiences involved.", "The Universe ID of the source and destination experiences (or a Place ID — we look it up).", "The DataStore name and scope you migrate from and to."] },
       { type: "h", text: "Steps" },
       { type: "steps", items: ["Create an Open Cloud API key with DataStore permissions.", "In DataBridge → Connections, paste the key. It is tested immediately.", "Create a project and add the source DataStore, then the destination DataStore.", "Create a migration, keep the default “skip existing” rule and run a dry run.", "Review the dry-run report, schedule a maintenance window, then run the migration and wait for every key to be verified."] },
-      { type: "callout", tone: "info", text: "Migrations are available in the next release. Connections, projects and DataStore configuration are ready today, so you can prepare everything now." },
     ],
   },
   {
@@ -143,7 +142,6 @@ const id: DocPage[] = [
       { type: "list", items: ["Izin owner atau grup untuk membuat API key Open Cloud bagi experience terkait.", "Universe ID experience sumber dan tujuan (atau Place ID — kami carikan).", "Nama DataStore dan scope asal dan tujuan."] },
       { type: "h", text: "Langkah" },
       { type: "steps", items: ["Buat API key Open Cloud dengan izin DataStore.", "Di DataBridge → Koneksi, tempel key-nya. Langsung dites.", "Buat project lalu tambahkan DataStore sumber, kemudian DataStore tujuan.", "Buat migrasi, biarkan aturan default “skip existing”, lalu jalankan dry run.", "Tinjau laporan dry run, jadwalkan maintenance, lalu jalankan migrasi sampai semua key terverifikasi."] },
-      { type: "callout", tone: "info", text: "Migrasi tersedia di rilis berikutnya. Koneksi, project, dan konfigurasi DataStore sudah siap, jadi kamu bisa menyiapkan semuanya sekarang." },
     ],
   },
   {
