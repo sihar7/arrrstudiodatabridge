@@ -11,7 +11,7 @@ const csp = [
   `script-src 'self' 'unsafe-inline'${dev ? " 'unsafe-eval'" : ""}`,
   "style-src 'self' 'unsafe-inline'",
   // tr.rbxcdn.com: avatar Roblox (userinfo/thumbnails)
-  "img-src 'self' data: blob: https://*.rbxcdn.com",
+  "img-src 'self' data: blob: https://*.rbxcdn.com https://cdn.discordapp.com",
   "font-src 'self' data:",
   "media-src 'self'",
   `connect-src 'self'${dev ? " ws: http://localhost:*" : ""}`,

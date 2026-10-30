@@ -24,13 +24,25 @@ export async function getWorkspaceCookie(): Promise<string | null> {
 }
 
 /** Penyedia login aktif (tombol Roblox hanya tampil bila app OAuth dikonfigurasi di API). */
-export async function getProviders(): Promise<{ roblox: boolean; robloxConnect: boolean }> {
+export type Providers = { discord: boolean; roblox: boolean; robloxConnect: boolean; emailSignup: boolean };
+const NO_PROVIDERS: Providers = { discord: false, roblox: false, robloxConnect: false, emailSignup: false };
+
+export async function getProviders(): Promise<Providers> {
   try {
     const res = await fetch(`${API}/api/v1/auth/providers`, { cache: "no-store" });
-    if (!res.ok) return { roblox: false, robloxConnect: false };
-    const d = ((await res.json()) as { data: { roblox: boolean; robloxConnect?: boolean } }).data;
-    return { roblox: d.roblox, robloxConnect: !!d.robloxConnect };
+    if (!res.ok) return NO_PROVIDERS;
+    return { ...NO_PROVIDERS, ...((await res.json()) as { data: Partial<Providers> }).data };
   } catch {
-    return { roblox: false, robloxConnect: false };
+    return NO_PROVIDERS;
+  }
+}
+
+/** Pratinjau link undangan (publik). */
+export async function getInvite(token: string): Promise<{ data?: { workspaceName: string; role: string; expiresAt: string }; error?: { code: string } }> {
+  try {
+    const res = await fetch(`${API}/api/v1/invites/${encodeURIComponent(token)}`, { cache: "no-store" });
+    return (await res.json()) as { data?: { workspaceName: string; role: string; expiresAt: string }; error?: { code: string } };
+  } catch {
+    return { error: { code: "NETWORK" } };
   }
 }

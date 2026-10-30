@@ -10,6 +10,7 @@ export type User = {
   hasPassword: boolean;
   isAdmin: boolean;
   roblox: { userId: string; username: string | null; displayName: string | null; avatarUrl: string | null } | null;
+  discord: { userId: string; username: string | null; avatarUrl: string | null } | null;
 };
 export type Workspace = { id: string; name: string; slug: string; type: "individual" | "studio"; plan: string; planExpiresAt: string | null; role: Role; permissions: Permission[] };
 export type Me = { user: User; workspaces: Workspace[] };
@@ -50,7 +51,18 @@ export type DatastoreConfig = {
   connection: { id: string; name: string; status: ConnectionStatus };
 };
 
-export type Member = { userId: string; name: string; email: string | null; role: Role; joinedAt: string; robloxUsername: string | null; robloxAvatarUrl: string | null };
+export type Member = {
+  userId: string;
+  name: string;
+  email: string | null;
+  role: Role;
+  joinedAt: string;
+  robloxUsername: string | null;
+  robloxAvatarUrl: string | null;
+  discordUsername?: string | null;
+  discordAvatarUrl?: string | null;
+};
+export type InviteLink = { id: string; role: Role; expiresAt: string; maxUses: number | null; uses: number; active: boolean; createdAt: string; url?: string };
 export type Invite = { id: string; robloxUserId: string; username: string; displayName: string | null; avatarUrl: string | null; role: Role; createdAt: string };
 export type RobloxUser = { userId: string; username: string; displayName: string; avatarUrl: string | null };
 

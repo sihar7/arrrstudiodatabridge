@@ -27,6 +27,7 @@ import { useF, useI18n } from "@/i18n/client";
 import { api, errorMessage } from "@/lib/api";
 import type { Workspace } from "@/lib/types";
 import { LocaleSwitch } from "./LocaleSwitch";
+import { Avatar } from "./Roblox";
 import { useWorkspace } from "./workspace";
 
 type NavItem = { href: string; label: string; icon: ReactNode; soon?: boolean };
@@ -311,12 +312,10 @@ function UserFooter() {
   return (
     <div className="flex flex-col gap-3 border-t border-line p-4">
       <div className="flex items-center gap-3">
-        <span className="grid size-8 shrink-0 place-items-center rounded-full border border-line bg-surface-3 font-display text-body-sm font-bold uppercase" aria-hidden="true">
-          {me.user.name.charAt(0)}
-        </span>
+        <Avatar src={me.user.discord?.avatarUrl ?? me.user.roblox?.avatarUrl} name={me.user.name} size={32} />
         <span className="flex min-w-0 flex-col">
           <span className="truncate text-body-sm font-medium">{me.user.name}</span>
-          <span className="truncate text-caption text-fg-3">{me.user.email}</span>
+          <span className="truncate text-caption text-fg-3">{me.user.email ?? (me.user.discord?.username ? `@${me.user.discord.username}` : "")}</span>
         </span>
       </div>
       <div className="flex items-center justify-between gap-2">

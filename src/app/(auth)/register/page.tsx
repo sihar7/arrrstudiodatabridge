@@ -13,7 +13,7 @@ export default async function Page() {
   const providers = await getProviders();
   return (
     <Suspense>
-      <AuthForm mode="register" roblox={providers.roblox} />
+      <AuthForm mode="register" providers={providers} />
     </Suspense>
   );
 }

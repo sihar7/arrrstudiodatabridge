@@ -13,7 +13,7 @@ export default async function Page() {
   const providers = await getProviders();
   return (
     <Suspense>
-      <AuthForm mode="login" roblox={providers.roblox} />
+      <AuthForm mode="login" providers={providers} />
     </Suspense>
   );
 }

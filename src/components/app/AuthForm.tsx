@@ -4,13 +4,17 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useState, type FormEvent } from "react";
+import { NavArrowDown } from "iconoir-react";
 import { Eye, EyeClosed } from "iconoir-react";
 import { Button, Card, Field, Input } from "@/components/ui";
 import { useF, useI18n } from "@/i18n/client";
+import { DiscordButton } from "./Discord";
 import { RobloxButton } from "./Roblox";
+import type { Providers } from "@/lib/server-api";
 import { api, errorMessage, fieldErrors } from "@/lib/api";
 
-export function AuthForm({ mode, roblox }: { mode: "login" | "register"; roblox: boolean }) {
+export function AuthForm({ mode, providers }: { mode: "login" | "register"; providers: Providers }) {
+  const roblox = providers.roblox;
   const { t, locale } = useI18n();
   const router = useRouter();
   const params = useSearchParams();
@@ -37,7 +41,7 @@ export function AuthForm({ mode, roblox }: { mode: "login" | "register"; roblox:
           : { name: form.get("name"), email: form.get("email"), password: form.get("password"), locale },
       });
       const next = params.get("next");
-      router.replace(next && next.startsWith("/dashboard") ? next : "/dashboard");
+      router.replace(next && next.startsWith("/") && !next.startsWith("//") ? next : "/dashboard");
       router.refresh();
     } catch (err) {
       setError(errorMessage(err, t.errors));
@@ -68,12 +72,31 @@ export function AuthForm({ mode, roblox }: { mode: "login" | "register"; roblox:
             </div>
           </>
         )}
-        <form onSubmit={onSubmit} className="flex flex-col gap-4" noValidate>
-          {error && (
-            <p role="alert" className="rounded-md border border-danger-edge bg-danger-bg px-3 py-2 text-body-sm text-danger">
-              {error}
-            </p>
+        {error && (
+          <p role="alert" className="mb-4 rounded-md border border-danger-edge bg-danger-bg px-3 py-2 text-body-sm text-danger">
+            {error}
+          </p>
+        )}
+        {/* User: Discord. Form email hanya untuk admin (dilipat) kecuali signup email diaktifkan */}
+        {!providers.emailSignup && (
+          <div className="flex flex-col gap-3">
+            {providers.discord ? (
+              <DiscordButton next={params.get("next")} label={isLogin ? f.discord.signIn : f.discord.signUp} className="w-full" />
+            ) : (
+              <p className="text-body-sm text-fg-2">{t.errors.DISCORD_DISABLED}</p>
+            )}
+            <p className="text-center text-caption text-fg-3">{f.discord.loginBody}</p>
+          </div>
+        )}
+        {(providers.emailSignup || isLogin) && (
+        <details className="group mt-5 border-t border-line pt-4" open={providers.emailSignup || undefined}>
+          {!providers.emailSignup && (
+            <summary className="flex cursor-pointer list-none items-center justify-between text-caption font-medium text-fg-3 hover:text-fg [&::-webkit-details-marker]:hidden">
+              {f.discord.adminToggle}
+              <NavArrowDown className="size-3.5 transition-transform group-open:rotate-180" aria-hidden="true" />
+            </summary>
           )}
+        <form onSubmit={onSubmit} className="mt-4 flex flex-col gap-4" noValidate>
           {!isLogin && (
             <Field label={t.auth.name} error={fields.name}>
               {(id, d) => <Input id={id} name="name" autoComplete="name" required maxLength={80} aria-describedby={d} aria-invalid={!!fields.name} />}
@@ -112,13 +135,17 @@ export function AuthForm({ mode, roblox }: { mode: "login" | "register"; roblox:
             {isLogin ? (busy ? t.auth.signingIn : t.auth.signIn) : busy ? t.auth.signingUp : t.auth.signUp}
           </Button>
         </form>
+        </details>
+        )}
       </Card>
+      {providers.emailSignup && (
       <p className="text-center text-body-sm text-fg-2">
         {isLogin ? t.auth.noAccount : t.auth.haveAccount}{" "}
         <Link href={isLogin ? "/register" : "/login"} className="font-medium text-link hover:underline">
           {isLogin ? t.auth.toRegister : t.auth.toLogin}
         </Link>
       </p>
+      )}
     </div>
   );
 }

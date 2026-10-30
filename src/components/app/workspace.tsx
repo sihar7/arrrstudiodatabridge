@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import { createContext, useCallback, useContext, useEffect, useState, type ReactNode } from "react";
 import { api, setApiWorkspace } from "@/lib/api";
 import type { Me, Permission, Workspace } from "@/lib/types";
+import type { Providers } from "@/lib/server-api";
 
 // Konteks sesi dashboard: user, daftar workspace, workspace aktif (cookie dbr_ws) & cek izin role.
 
@@ -13,7 +14,7 @@ type Ctx = {
   can: (p: Permission) => boolean;
   switchWorkspace: (id: string) => void;
   refreshMe: () => Promise<void>;
-  providers: { roblox: boolean; robloxConnect: boolean };
+  providers: Providers;
 };
 
 const WorkspaceContext = createContext<Ctx | null>(null);
@@ -24,7 +25,7 @@ export function useWorkspace() {
   return ctx;
 }
 
-export function WorkspaceProvider({ initialMe, activeId, providers, children }: { initialMe: Me; activeId: string; providers: { roblox: boolean; robloxConnect: boolean }; children: ReactNode }) {
+export function WorkspaceProvider({ initialMe, activeId, providers, children }: { initialMe: Me; activeId: string; providers: Providers; children: ReactNode }) {
   const router = useRouter();
   const [me, setMe] = useState(initialMe);
   const [currentId, setCurrentId] = useState(activeId);
