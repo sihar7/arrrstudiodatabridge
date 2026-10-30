@@ -6,15 +6,19 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { useState, type FormEvent } from "react";
 import { Eye, EyeClosed } from "iconoir-react";
 import { Button, Card, Field, Input } from "@/components/ui";
-import { useI18n } from "@/i18n/client";
+import { useF, useI18n } from "@/i18n/client";
+import { RobloxButton } from "./Roblox";
 import { api, errorMessage, fieldErrors } from "@/lib/api";
 
-export function AuthForm({ mode }: { mode: "login" | "register" }) {
+export function AuthForm({ mode, roblox }: { mode: "login" | "register"; roblox: boolean }) {
   const { t, locale } = useI18n();
   const router = useRouter();
   const params = useSearchParams();
   const [busy, setBusy] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const f = useF();
+  // Galat dari callback OAuth Roblox (?error=KODE)
+  const oauthError = params.get("error");
+  const [error, setError] = useState<string | null>(oauthError ? (t.errors[oauthError] ?? oauthError) : null);
   const [fields, setFields] = useState<Record<string, string>>({});
   const [showPw, setShowPw] = useState(false);
   const isLogin = mode === "login";
@@ -44,12 +48,26 @@ export function AuthForm({ mode }: { mode: "login" | "register" }) {
 
   return (
     <div className="flex w-full max-w-[400px] flex-col gap-6">
-      <Image src="/brand/logo-full.webp" alt="ARRR Studio DataBridge" width={900} height={511} priority className="mx-auto h-auto w-56" />
+      <Image src="/brand/logo-full.webp" alt="ARRR Studio DataBridge" width={900} height={511} priority sizes="224px" className="mx-auto h-auto w-56" />
       <div className="flex flex-col gap-2">
         <h1 className="text-[28px] font-bold leading-[1.15] tracking-display">{isLogin ? t.auth.loginTitle : t.auth.registerTitle}</h1>
         <p className="text-body-sm text-fg-2">{isLogin ? t.auth.loginSubtitle : t.auth.registerSubtitle}</p>
       </div>
       <Card className="p-6">
+        {roblox && (
+          <>
+            <RobloxButton
+              href={`/api/v1/auth/roblox/start?intent=login${params.get("next") ? `&next=${encodeURIComponent(params.get("next")!)}` : ""}`}
+              label={f.roblox.signIn}
+              className="w-full"
+            />
+            <div className="my-5 flex items-center gap-3 text-caption text-fg-3" aria-hidden="true">
+              <span className="h-px flex-1 bg-line" />
+              {f.roblox.or}
+              <span className="h-px flex-1 bg-line" />
+            </div>
+          </>
+        )}
         <form onSubmit={onSubmit} className="flex flex-col gap-4" noValidate>
           {error && (
             <p role="alert" className="rounded-md border border-danger-edge bg-danger-bg px-3 py-2 text-body-sm text-danger">

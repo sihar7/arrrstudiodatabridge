@@ -23,7 +23,7 @@
   --color-fg: #eeeef0;              /* teks utama */
   --color-fg-heading: #e5e5e5;      /* judul/display */
   --color-fg-2: #b5b2bc;            /* teks sekunder, placeholder, ikon */
-  --color-fg-3: #7c7a85;            /* meta, nav tidak aktif, status pending */
+  --color-fg-3: #8b8994;            /* meta, nav tidak aktif, status pending (≥4.5:1 di permukaan) */
 
   --color-signal: #6ee614;          /* lime logo — CTA utama (isi) + titik status sukses */
   --color-signal-hi: #b8f830;       /* highlight lime (hover CTA, kilau) */

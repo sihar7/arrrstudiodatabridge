@@ -3,7 +3,7 @@ import { cookies } from "next/headers";
 import type { Me } from "./types";
 
 // Panggilan API dari Server Component: langsung ke API_URL dengan meneruskan cookie sesi.
-const API = (process.env.API_URL || "http://localhost:8080").replace(/\/$/, "");
+const API = (process.env.API_URL || (process.env.NODE_ENV === "production" ? "https://databridge-be.up.railway.app" : "http://localhost:8080")).replace(/\/$/, "");
 export const WORKSPACE_COOKIE = "dbr_ws";
 
 export async function getMe(): Promise<Me | null> {
@@ -21,4 +21,15 @@ export async function getMe(): Promise<Me | null> {
 
 export async function getWorkspaceCookie(): Promise<string | null> {
   return (await cookies()).get(WORKSPACE_COOKIE)?.value ?? null;
+}
+
+/** Penyedia login aktif (tombol Roblox hanya tampil bila app OAuth dikonfigurasi di API). */
+export async function getProviders(): Promise<{ roblox: boolean }> {
+  try {
+    const res = await fetch(`${API}/api/v1/auth/providers`, { cache: "no-store" });
+    if (!res.ok) return { roblox: false };
+    return ((await res.json()) as { data: { roblox: boolean } }).data;
+  } catch {
+    return { roblox: false };
+  }
 }

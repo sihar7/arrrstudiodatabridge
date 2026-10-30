@@ -2,15 +2,18 @@ import type { NextConfig } from "next";
 
 // Semua proses server ada di API (ARRRDataBridge/api, Railway); /api/v1/* di-proxy ke sana
 // sehingga cookie sesi tetap milik domain web (first-party, SameSite=Lax).
-const api = (process.env.API_URL || "http://localhost:8080").replace(/\/$/, "");
 const dev = process.env.NODE_ENV !== "production";
+// API produksi di Railway; dev → API lokal. Bisa ditimpa env API_URL.
+const api = (process.env.API_URL || (dev ? "http://localhost:8080" : "https://databridge-be.up.railway.app")).replace(/\/$/, "");
 
 const csp = [
   "default-src 'self'",
   `script-src 'self' 'unsafe-inline'${dev ? " 'unsafe-eval'" : ""}`,
   "style-src 'self' 'unsafe-inline'",
-  "img-src 'self' data: blob:",
+  // tr.rbxcdn.com: avatar Roblox (userinfo/thumbnails)
+  "img-src 'self' data: blob: https://*.rbxcdn.com",
   "font-src 'self' data:",
+  "media-src 'self'",
   `connect-src 'self'${dev ? " ws: http://localhost:*" : ""}`,
   "frame-ancestors 'none'",
   "base-uri 'self'",
@@ -40,7 +43,11 @@ const nextConfig: NextConfig = {
   async rewrites() {
     return [{ source: "/api/v1/:path*", destination: `${api}/api/v1/:path*` }];
   },
-  experimental: { optimizePackageImports: ["iconoir-react"] },
+  experimental: {
+    optimizePackageImports: ["iconoir-react"],
+    // CSS Tailwind di-inline ke <head> → tanpa request CSS yang memblokir render (LCP mobile)
+    inlineCss: true,
+  },
   turbopack: {
     rules: { "*.css": { loaders: ["@tailwindcss/turbopack"], as: "*.css" } },
   },

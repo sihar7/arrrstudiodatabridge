@@ -75,3 +75,19 @@ export function fieldErrors(e: unknown): Record<string, string> {
   if (!(e instanceof ApiError) || !e.details) return {};
   return Object.fromEntries(Object.entries(e.details).map(([k, v]) => [k, v?.[0] ?? ""]));
 }
+
+/** Unggah file (multipart/form-data) — header CSRF & workspace sama dengan api(). */
+export async function apiUpload<T>(path: string, form: FormData): Promise<T> {
+  const headers: Record<string, string> = { "x-requested-with": "databridge" };
+  if (currentWorkspace) headers["x-workspace-id"] = currentWorkspace;
+  const done = loading.start();
+  try {
+    const res = await fetch(`/api/v1${path}`, { method: "POST", headers, body: form, credentials: "same-origin" }).catch(() => null);
+    if (!res) throw new ApiError(0, "NETWORK", "Network error");
+    const json = (await res.json().catch(() => null)) as Envelope<T, unknown> | null;
+    if (!res.ok || !json || json.error) throw new ApiError(res.status, json?.error?.code ?? "INTERNAL", json?.error?.message ?? `HTTP ${res.status}`, json?.error?.details);
+    return json.data as T;
+  } finally {
+    done();
+  }
+}

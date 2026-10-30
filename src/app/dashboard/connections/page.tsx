@@ -2,12 +2,13 @@
 
 import dynamic from "next/dynamic";
 import { useSearchParams } from "next/navigation";
-import { Suspense, useState } from "react";
+import { Suspense, useEffect, useRef, useState } from "react";
+import { RobloxButton, RobloxMark } from "@/components/app/Roblox";
 import { EditPencil, Key, CloudSync, Plus, RefreshDouble, Trash, WarningTriangle } from "iconoir-react";
 import { useApi, useWorkspace } from "@/components/app/workspace";
 import { Button, Card, EmptyState, ErrorBox, PageHeader, Skeleton, StatusDot, Tag } from "@/components/ui";
 import { useConfirm, useToast } from "@/components/ui/feedback";
-import { useI18n } from "@/i18n/client";
+import { useF, useI18n } from "@/i18n/client";
 import { api, errorMessage } from "@/lib/api";
 import type { Connection } from "@/lib/types";
 
@@ -26,9 +27,21 @@ export default function ConnectionsPage() {
 
 function Connections() {
   const { t } = useI18n();
-  const { can } = useWorkspace();
+  const { can, workspace, providers } = useWorkspace();
+  const f = useF();
+  const toast = useToast();
   const params = useSearchParams();
   const list = useApi<Connection[]>("/connections");
+  // Hasil kembali dari Roblox OAuth (?connected=id / ?error=KODE) → toast sekali
+  const shown = useRef(false);
+  useEffect(() => {
+    if (shown.current) return;
+    shown.current = true;
+    const err = params.get("error");
+    if (params.get("connected")) toast.success(f.roblox.connected);
+    else if (err) toast.error(t.errors[err] ?? err);
+  }, [params, toast, f, t.errors]);
+  const connectHref = `/api/v1/auth/roblox/start?intent=connect&workspaceId=${workspace.id}`;
   const manage = can("connections.manage");
   // ?new=1 (dari aksi cepat Overview) → dialog langsung terbuka
   const [dialog, setDialog] = useState<DialogState>(() => (params.get("new") === "1" && manage ? { mode: "create" } : null));
@@ -42,11 +55,19 @@ function Connections() {
         title={c.title}
         subtitle={c.subtitle}
         actions={
-          manage && (
+          manage &&
+          (providers.roblox ? (
+            <>
+              <Button variant="ghost" icon={<Plus className="size-4" aria-hidden="true" />} onClick={() => setDialog({ mode: "create" })}>
+                {f.roblox.apiKeyAlt}
+              </Button>
+              <RobloxButton href={connectHref} label={f.roblox.connect} variant="primary" />
+            </>
+          ) : (
             <Button variant="primary" icon={<Plus className="size-4" aria-hidden="true" />} onClick={() => setDialog({ mode: "create" })}>
               {c.add}
             </Button>
-          )
+          ))
         }
       />
       {!manage && <p className="text-body-sm text-fg-3">{t.app.readOnly}</p>}
@@ -65,9 +86,17 @@ function Connections() {
           body={c.emptyBody}
           action={
             manage && (
-              <Button variant="primary" icon={<Plus className="size-4" aria-hidden="true" />} onClick={() => setDialog({ mode: "create" })}>
-                {c.add}
-              </Button>
+              <div className="flex flex-col items-center gap-3">
+                {providers.roblox && (
+                  <>
+                    <RobloxButton href={connectHref} label={f.roblox.connect} variant="primary" />
+                    <p className="max-w-sm text-caption text-fg-3">{f.roblox.connectBody}</p>
+                  </>
+                )}
+                <Button variant={providers.roblox ? "ghost" : "primary"} icon={<Plus className="size-4" aria-hidden="true" />} onClick={() => setDialog({ mode: "create" })}>
+                  {providers.roblox ? f.roblox.apiKeyAlt : c.add}
+                </Button>
+              </div>
             )
           }
         />
@@ -81,6 +110,7 @@ function Connections() {
                 onChanged={upsert}
                 onRemoved={() => list.setData((d) => d?.filter((x) => x.id !== conn.id) ?? null)}
                 onEdit={(mode) => setDialog({ mode, connection: conn })}
+                reconnectHref={`${connectHref}&connectionId=${conn.id}`}
               />
             </li>
           ))}
@@ -98,13 +128,16 @@ function ConnectionCard({
   onChanged,
   onRemoved,
   onEdit,
+  reconnectHref,
 }: {
   conn: Connection;
   manage: boolean;
   onChanged: (c: Connection) => void;
   onRemoved: () => void;
   onEdit: (mode: "rename" | "rotate") => void;
+  reconnectHref: string;
 }) {
+  const f = useF();
   const { t, locale } = useI18n();
   const toast = useToast();
   const confirm = useConfirm();
@@ -158,7 +191,7 @@ function ConnectionCard({
           </div>
           <p className="flex flex-wrap items-center gap-x-4 gap-y-1 font-mono text-caption tracking-normal text-fg-3">
             <span className="flex items-center gap-1.5">
-              <Key className="size-3.5" aria-hidden="true" />
+              {conn.authType === "oauth" ? <RobloxMark className="size-3.5" /> : <Key className="size-3.5" aria-hidden="true" />}
               <span className="text-fg-2">{conn.keyHint}</span>
             </span>
             {k?.name && (
@@ -176,9 +209,16 @@ function ConnectionCard({
             <Button size="sm" variant="plain" icon={<EditPencil className="size-3.5" aria-hidden="true" />} onClick={() => onEdit("rename")}>
               {c.rename}
             </Button>
-            <Button size="sm" variant="plain" icon={<Key className="size-3.5" aria-hidden="true" />} onClick={() => onEdit("rotate")}>
-              {c.rotate}
-            </Button>
+            {conn.authType === "oauth" ? (
+              <a href={reconnectHref} className="inline-flex h-8 items-center gap-2 rounded-md px-3 text-caption font-medium text-fg-2 hover:bg-surface-2 hover:text-fg">
+                <RobloxMark className="size-3.5" />
+                {f.roblox.reconnect}
+              </a>
+            ) : (
+              <Button size="sm" variant="plain" icon={<Key className="size-3.5" aria-hidden="true" />} onClick={() => onEdit("rotate")}>
+                {c.rotate}
+              </Button>
+            )}
             <Button size="sm" variant="plain" className="hover:text-danger" icon={<Trash className="size-3.5" aria-hidden="true" />} onClick={remove} aria-label={`${t.common.delete} ${conn.name}`}>
               {t.common.delete}
             </Button>

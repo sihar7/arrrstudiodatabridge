@@ -629,6 +629,11 @@ const id: Dict = {
   },
 };
 
+import { features } from "./features";
+// Kode galat fitur Fase 2 ikut ke errors (dipakai errorMessage di semua halaman)
+Object.assign(en.errors, features.en.oauthErrors);
+Object.assign(id.errors, features.id.oauthErrors);
+
 export const dictionaries = { en, id } as const;
 export type Locale = keyof typeof dictionaries;
 export const LOCALES: Locale[] = ["en", "id"];

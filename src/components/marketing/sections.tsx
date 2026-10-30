@@ -182,15 +182,15 @@ export function MigrationPreview({ l, className }: { l: L; className?: string })
           { head: l.panelDest, uni: "222222", ds: "PlayerData_V2" },
         ].map((side, i) => (
           <div key={side.head} className={cn("flex flex-col", i === 0 && "border-line-2 max-md:border-b md:border-r")}>
-            <div className="flex flex-wrap items-center justify-between gap-2 px-4 pt-4 font-mono text-caption tracking-normal">
-              <span className="text-fg-3">{side.head}</span>
-              <span className="text-fg-2">
+            <div className="flex h-9 items-end justify-between gap-3 px-4 font-mono text-caption tracking-normal">
+              <span className="shrink-0 text-fg-3">{side.head}</span>
+              <span className="truncate text-fg-2">
                 universe/{side.uni} <span className="text-fg-3">›</span> <span className="text-lilac">{side.ds}</span> <span className="text-fg-3">› global</span>
               </span>
             </div>
             <ul className="flex flex-col py-2">
               {rows.map((r) => (
-                <li key={r.key} className="flex items-center justify-between gap-4 px-4 py-1.5 font-mono text-body-sm tracking-normal">
+                <li key={r.key} className="flex h-8 items-center justify-between gap-4 px-4 font-mono text-body-sm tracking-normal">
                   <span className="truncate text-fg">{r.key}</span>
                   {i === 0 ? (
                     <span className="text-fg-3">read</span>

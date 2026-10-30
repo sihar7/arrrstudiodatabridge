@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight } from "iconoir-react";
 import { FeatureGrid, HowSteps, MigrationPreview, PricingGrid, SafetyBlock, Section, btnGhost, btnPrimary } from "@/components/marketing/sections";
+import { TutorialVideo } from "@/components/marketing/TutorialVideo";
 import { marketing } from "@/i18n/marketing";
 import { getDict } from "@/i18n/server";
 import { getMe } from "@/lib/server-api";
@@ -32,18 +33,24 @@ export default async function Landing() {
             </Link>
           </div>
         </div>
-        <Image
-          src="/brand/logo-full.webp"
-          alt="ARRR Studio DataBridge"
-          width={900}
-          height={511}
-          priority
-          sizes="(min-width: 1024px) 460px, 0px"
-          className="hidden h-auto w-full drop-shadow-[0_0_48px_rgba(110,230,20,0.12)] lg:block"
-        />
+        <div className="hidden lg:block">
+          <Image
+            src="/brand/logo-full.webp"
+            alt="ARRR Studio DataBridge"
+            width={900}
+            height={511}
+            priority
+            sizes="460px"
+            className="h-auto w-full drop-shadow-[0_0_48px_rgba(110,230,20,0.12)]"
+          />
+        </div>
         </div>
         <MigrationPreview l={l} className="mt-14" />
       </section>
+
+      <Section id="tutorial" title={m.landing.videoTitle} note={m.landing.videoBody}>
+        <TutorialVideo locale={locale} label={m.landing.videoPlay} duration="1:30" />
+      </Section>
 
       <Section title={l.featuresTitle} more={{ href: "/features", label: m.landing.allFeatures }}>
         <FeatureGrid l={l} soon={t.common.soon} />

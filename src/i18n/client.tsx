@@ -2,16 +2,39 @@
 
 import { createContext, useCallback, useContext, type ReactNode } from "react";
 import { useRouter } from "next/navigation";
-import { dictionaries, LOCALE_COOKIE, type Dict, type Locale } from "./dict";
+import type { Dict, Locale } from "./dict";
+import type { FeaturesDict } from "./features";
 
-const I18nContext = createContext<{ locale: Locale; t: Dict }>({ locale: "en", t: dictionaries.en });
+// Kamus dikirim dari server HANYA untuk bahasa aktif (props), bukan di-bundle ke JS klien —
+// menghemat ±20 KB gzip di setiap halaman (Lighthouse mobile).
+const LOCALE_COOKIE = "dbr_lang";
 
-export function I18nProvider({ locale, children }: { locale: Locale; children: ReactNode }) {
-  return <I18nContext.Provider value={{ locale, t: dictionaries[locale] }}>{children}</I18nContext.Provider>;
+type Ctx = { locale: Locale; t: Dict; f: FeaturesDict };
+const I18nContext = createContext<Ctx | null>(null);
+
+export function I18nProvider({ locale, t, f, children }: Ctx & { children: ReactNode }) {
+  return <I18nContext.Provider value={{ locale, t, f }}>{children}</I18nContext.Provider>;
+}
+
+function useCtx(): Ctx {
+  const c = useContext(I18nContext);
+  if (!c) throw new Error("useI18n di luar <I18nProvider>");
+  return c;
 }
 
 export function useI18n() {
-  return useContext(I18nContext);
+  const { locale, t } = useCtx();
+  return { locale, t };
+}
+
+/** Teks fitur Fase 2 (migrasi, explorer, billing, admin, OAuth). */
+export function useF(): FeaturesDict {
+  return useCtx().f;
+}
+
+/** Isi placeholder {nama} pada string kamus. */
+export function fmt(s: string, vars: Record<string, string | number>) {
+  return s.replace(/\{(\w+)\}/g, (_, k: string) => String(vars[k] ?? ""));
 }
 
 /** Ganti bahasa: simpan cookie 1 tahun lalu render ulang komponen server. */

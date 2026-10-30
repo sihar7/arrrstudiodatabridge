@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { NavArrowRight } from "iconoir-react";
 import { HowSteps, MigrationPreview, PageIntro, SafetyBlock, Section } from "@/components/marketing/sections";
+import { TutorialVideo } from "@/components/marketing/TutorialVideo";
 import { marketing } from "@/i18n/marketing";
 import { getDict } from "@/i18n/server";
 
@@ -18,6 +19,10 @@ export default async function HowItWorksPage() {
 
       <Section title={t.landing.howTitle} first>
         <HowSteps l={t.landing} />
+      </Section>
+
+      <Section title={marketing[locale].landing.videoTitle} note={marketing[locale].landing.videoBody}>
+        <TutorialVideo locale={locale} label={marketing[locale].landing.videoPlay} duration="1:30" />
       </Section>
 
       <Section title={h.pipelineTitle} note={h.pipelineBody}>

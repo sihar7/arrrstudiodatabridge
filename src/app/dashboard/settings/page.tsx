@@ -1,22 +1,63 @@
 "use client";
 
-import { useRouter } from "next/navigation";
-import { useState, type FormEvent, type ReactNode } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { Suspense, useEffect, useRef, useState, type FormEvent, type ReactNode } from "react";
+import { Avatar, RobloxButton, RobloxMark } from "@/components/app/Roblox";
 import { useWorkspace } from "@/components/app/workspace";
 import { Button, Card, Field, Input, PageHeader, Select, Tag } from "@/components/ui";
-import { useToast } from "@/components/ui/feedback";
-import { useI18n, useSetLocale } from "@/i18n/client";
+import { useConfirm, useToast } from "@/components/ui/feedback";
+import { useF, useI18n, useSetLocale } from "@/i18n/client";
 import { api, errorMessage } from "@/lib/api";
 
 export default function SettingsPage() {
+  return (
+    <Suspense>
+      <Settings />
+    </Suspense>
+  );
+}
+
+function Settings() {
   const { t, locale } = useI18n();
-  const { me, workspace, can, refreshMe } = useWorkspace();
+  const fx = useF();
+  const confirm = useConfirm();
+  const params = useSearchParams();
+  const { me, workspace, can, refreshMe, providers } = useWorkspace();
+  // Hasil kembali dari "Tautkan akun Roblox"
+  const shown = useRef(false);
   const router = useRouter();
   const toast = useToast();
   const setLocale = useSetLocale();
   const [savingProfile, setSavingProfile] = useState(false);
   const [savingWs, setSavingWs] = useState(false);
   const s = t.settings;
+
+  useEffect(() => {
+    if (shown.current) return;
+    shown.current = true;
+    const err = params.get("error");
+    if (params.get("linked")) {
+      const joined = Number(params.get("joined") ?? 0);
+      toast.success(fx.roblox.linked, joined ? fx.roblox.joined.replace("{n}", String(joined)) : undefined);
+    } else if (err) toast.error(t.errors[err] ?? err);
+  }, [params, toast, fx, t.errors]);
+
+  async function unlink() {
+    const ok = await confirm({
+      title: fx.roblox.unlinkTitle,
+      text: fx.roblox.unlinkBody,
+      tone: "warning",
+      confirmText: fx.roblox.unlink,
+      preConfirm: async () => {
+        try {
+          await api("/auth/roblox", { method: "DELETE" });
+        } catch (e) {
+          throw new Error(errorMessage(e, t.errors));
+        }
+      },
+    });
+    if (ok) await refreshMe();
+  }
 
   async function saveProfile(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -59,7 +100,7 @@ export default function SettingsPage() {
       <Section title={s.profile} body={s.profileBody}>
         <form onSubmit={saveProfile} className="flex flex-col gap-4">
           <Field label={t.auth.name}>{(id) => <Input id={id} name="name" defaultValue={me.user.name} required maxLength={80} />}</Field>
-          <Field label={t.auth.email}>{(id) => <Input id={id} value={me.user.email} readOnly disabled />}</Field>
+          {me.user.email && <Field label={t.auth.email}>{(id) => <Input id={id} value={me.user.email ?? ""} readOnly disabled />}</Field>}
           <Field label={t.common.language}>
             {(id) => (
               <Select id={id} name="locale" defaultValue={locale}>
@@ -74,6 +115,32 @@ export default function SettingsPage() {
             </Button>
           </div>
         </form>
+      </Section>
+
+      <Section title={fx.roblox.linkTitle} body={fx.roblox.linkBody}>
+        {me.user.roblox ? (
+          <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+            <div className="flex items-center gap-3">
+              <Avatar src={me.user.roblox.avatarUrl} name={me.user.roblox.username ?? "R"} size={44} />
+              <div className="flex flex-col">
+                <span className="text-caption text-fg-3">{fx.roblox.linkedAs}</span>
+                <span className="flex items-center gap-1.5 font-medium">
+                  <RobloxMark className="size-3.5 text-fg-2" />@{me.user.roblox.username}
+                </span>
+                {me.user.roblox.displayName && <span className="text-caption text-fg-2">{me.user.roblox.displayName}</span>}
+              </div>
+            </div>
+            {me.user.hasPassword && (
+              <Button variant="ghost" onClick={unlink}>
+                {fx.roblox.unlink}
+              </Button>
+            )}
+          </div>
+        ) : providers.roblox ? (
+          <RobloxButton href="/api/v1/auth/roblox/start?intent=link" label={fx.roblox.link} />
+        ) : (
+          <p className="text-body-sm text-fg-3">{t.errors.ROBLOX_DISABLED}</p>
+        )}
       </Section>
 
       <Section title={s.workspace} body={s.workspaceBody} aside={<Tag tone="green">{`${s.plan}: ${workspace.plan}`}</Tag>}>

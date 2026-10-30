@@ -13,6 +13,7 @@ type Ctx = {
   can: (p: Permission) => boolean;
   switchWorkspace: (id: string) => void;
   refreshMe: () => Promise<void>;
+  providers: { roblox: boolean };
 };
 
 const WorkspaceContext = createContext<Ctx | null>(null);
@@ -23,7 +24,7 @@ export function useWorkspace() {
   return ctx;
 }
 
-export function WorkspaceProvider({ initialMe, activeId, children }: { initialMe: Me; activeId: string; children: ReactNode }) {
+export function WorkspaceProvider({ initialMe, activeId, providers, children }: { initialMe: Me; activeId: string; providers: { roblox: boolean }; children: ReactNode }) {
   const router = useRouter();
   const [me, setMe] = useState(initialMe);
   const [currentId, setCurrentId] = useState(activeId);
@@ -61,7 +62,7 @@ export function WorkspaceProvider({ initialMe, activeId, children }: { initialMe
 
   const can = useCallback((p: Permission) => workspace.permissions.includes(p), [workspace]);
 
-  return <WorkspaceContext.Provider value={{ me, workspace, can, switchWorkspace, refreshMe }}>{children}</WorkspaceContext.Provider>;
+  return <WorkspaceContext.Provider value={{ me, workspace, can, switchWorkspace, refreshMe, providers }}>{children}</WorkspaceContext.Provider>;
 }
 
 /** Ambil data API; dimuat ulang saat workspace/path berubah. `loading` diturunkan dari kunci request

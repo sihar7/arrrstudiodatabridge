@@ -17,11 +17,13 @@ import {
   Check,
   Search,
   Xmark,
+  CreditCard,
+  ShieldCheck,
   CloudSync,
 } from "iconoir-react";
 import { Button, Dialog, Field, Input, Logo, Select, Tag, cn } from "@/components/ui";
 import { useToast } from "@/components/ui/feedback";
-import { useI18n } from "@/i18n/client";
+import { useF, useI18n } from "@/i18n/client";
 import { api, errorMessage } from "@/lib/api";
 import type { Workspace } from "@/lib/types";
 import { LocaleSwitch } from "./LocaleSwitch";
@@ -31,6 +33,8 @@ type NavItem = { href: string; label: string; icon: ReactNode; soon?: boolean };
 
 export function AppShell({ children }: { children: ReactNode }) {
   const { t } = useI18n();
+  const f = useF();
+  const { me } = useWorkspace();
   const pathname = usePathname();
   const [drawer, setDrawer] = useState(false);
   const [lastPath, setLastPath] = useState(pathname);
@@ -57,8 +61,8 @@ export function AppShell({ children }: { children: ReactNode }) {
     {
       label: n.sectionData,
       items: [
-        { href: "/dashboard/migrations", label: n.migrations, icon: <DataTransferBoth />, soon: true },
-        { href: "/dashboard/explorer", label: n.explorer, icon: <Search />, soon: true },
+        { href: "/dashboard/migrations", label: n.migrations, icon: <DataTransferBoth /> },
+        { href: "/dashboard/explorer", label: n.explorer, icon: <Search /> },
         { href: "/dashboard/backups", label: n.backups, icon: <Archive />, soon: true },
       ],
     },
@@ -66,9 +70,11 @@ export function AppShell({ children }: { children: ReactNode }) {
       label: n.sectionWorkspace,
       items: [
         { href: "/dashboard/team", label: n.team, icon: <Group /> },
+        { href: "/dashboard/billing", label: f.nav.billing, icon: <CreditCard /> },
         { href: "/dashboard/settings", label: n.settings, icon: <Settings /> },
       ],
     },
+    ...(me.user.isAdmin ? [{ label: "Platform", items: [{ href: "/admin", label: f.nav.admin, icon: <ShieldCheck /> }] }] : []),
   ];
 
   const sidebar = (

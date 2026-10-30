@@ -7,6 +7,9 @@ const en = {
     allFeatures: "All features",
     fullHow: "See the full flow",
     fullPricing: "Compare plans",
+    videoTitle: "See it in action",
+    videoBody: "A real recording of DataBridge: connect Roblox, add DataStores, dry run, migrate and verify — in 90 seconds.",
+    videoPlay: "Watch the tutorial",
   },
   features: {
     title: "Everything a migration needs. Nothing it doesn’t.",
@@ -55,6 +58,9 @@ const id: MarketingDict = {
     allFeatures: "Semua fitur",
     fullHow: "Lihat alur lengkap",
     fullPricing: "Bandingkan paket",
+    videoTitle: "Lihat cara pakainya",
+    videoBody: "Rekaman asli DataBridge: hubungkan Roblox, tambah DataStore, dry run, migrasi, dan verifikasi — dalam 90 detik.",
+    videoPlay: "Tonton tutorial",
   },
   features: {
     title: "Semua yang dibutuhkan migrasi. Tanpa yang tidak perlu.",
