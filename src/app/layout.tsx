@@ -15,11 +15,21 @@ const text = Red_Hat_Text({ subsets: ["latin"], variable: "--font-rh-text", disp
 const mono = Red_Hat_Mono({ subsets: ["latin"], variable: "--font-rh-mono", display: "swap", preload: false });
 
 export async function generateMetadata(): Promise<Metadata> {
-  const { t } = await getDict();
+  const { t, locale } = await getDict();
   return {
+    // URL absolut untuk og:image/twitter:image (preview link di Discord, WhatsApp, X)
+    metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || "https://databridge.arrrstudio.com"),
     title: { default: t.meta.title, template: "%s · ARRR DataBridge" },
     description: t.meta.description,
     applicationName: "ARRR DataBridge",
+    openGraph: {
+      type: "website",
+      siteName: "ARRR DataBridge",
+      title: t.meta.title,
+      description: t.meta.description,
+      locale: locale === "id" ? "id_ID" : "en_US",
+    },
+    twitter: { card: "summary_large_image", title: t.meta.title, description: t.meta.description },
   };
 }
 
