@@ -460,10 +460,37 @@ function Migrations() {
 function System() {
   const { t } = useI18n();
   const f = useF();
+  const toast = useToast();
+  const confirm = useConfirm();
   const s = useAdmin<Record<string, string | number | boolean | null>>("/admin/system");
   if (s.loading) return <Skeleton className="h-40" />;
   if (s.error || !s.data) return <ErrorBox message={errorMessage(s.error, t.errors)} onRetry={s.reload} retry={t.common.retry} />;
+
+  async function reset() {
+    const ok = await confirm({
+      title: f.admin.resetTitle,
+      text: f.admin.resetBody,
+      tone: "danger",
+      confirmText: f.admin.resetButton,
+      typeToConfirm: "RESET ALL DATA",
+      preConfirm: async () => {
+        try {
+          await api("/admin/reset", { method: "POST", body: { confirm: "RESET ALL DATA" }, workspace: null });
+        } catch (e) {
+          throw new Error(errorMessage(e, t.errors));
+        }
+      },
+    });
+    if (ok) {
+      toast.success(f.admin.resetDone);
+      // Workspace lama terhapus → bersihkan pilihan workspace lalu muat ulang
+      document.cookie = "dbr_ws=; path=/; max-age=0";
+      window.location.reload();
+    }
+  }
+
   return (
+    <>
     <dl className="grid gap-px overflow-hidden rounded-md border border-line bg-line sm:grid-cols-2 lg:grid-cols-3">
       {Object.entries(s.data).map(([k, v]) => (
         <div key={k} className="flex flex-col gap-1 bg-surface p-4">
@@ -472,6 +499,17 @@ function System() {
         </div>
       ))}
     </dl>
+    <section className="flex flex-col gap-4 rounded-md border border-danger-edge bg-danger-bg/40 p-5 sm:flex-row sm:items-center sm:justify-between">
+      <div className="flex max-w-2xl flex-col gap-1">
+        <span className="text-caption font-medium uppercase tracking-[0.3px] text-danger">{f.admin.danger}</span>
+        <h2 className="text-sub font-semibold">{f.admin.resetTitle}</h2>
+        <p className="text-body-sm text-fg-2">{f.admin.resetBody}</p>
+      </div>
+      <Button variant="danger" onClick={reset} className="shrink-0">
+        {f.admin.resetButton}
+      </Button>
+    </section>
+    </>
   );
 }
 

@@ -22,6 +22,8 @@ const en = {
   },
   oauthErrors: {
     ROBLOX_DISABLED: "Roblox sign-in isn’t configured yet.",
+    ADMIN_NO_ROBLOX: "Admin accounts sign in with email and password only — they can’t be linked to Roblox.",
+    CONFIRM_RESET: "Type RESET ALL DATA to confirm.",
     ROBLOX_CONNECT_DISABLED: "Connect with Roblox isn’t available yet — add an Open Cloud API key instead.",
     ROBLOX_DENIED: "Roblox authorization was cancelled.",
     OAUTH_STATE: "The sign-in link expired. Try again.",
@@ -235,6 +237,11 @@ const en = {
     system: { dbMs: "Database latency", database: "Database", queue: "Queue", worker: "Worker", robloxOAuth: "Roblox OAuth", qrisConfigured: "QRIS image", node: "Node.js", uptimeSec: "Uptime (s)", memoryMb: "Memory (MB)" } as Record<string, string>,
     approved: "Order approved — plan activated",
     rejected: "Order rejected",
+    danger: "Danger zone",
+    resetTitle: "Reset all data",
+    resetBody: "Deletes every user (except admins), workspace, connection, project, migration and order. Your admin account is kept with a fresh Enterprise workspace. This can’t be undone.",
+    resetButton: "Reset all data",
+    resetDone: "All data has been reset",
   },
   nav: { billing: "Billing", admin: "Admin" },
 };
@@ -263,6 +270,8 @@ const id: FeaturesDict = {
   },
   oauthErrors: {
     ROBLOX_DISABLED: "Masuk dengan Roblox belum dikonfigurasi.",
+    ADMIN_NO_ROBLOX: "Akun admin hanya masuk dengan email dan kata sandi — tidak bisa ditautkan ke Roblox.",
+    CONFIRM_RESET: "Ketik RESET ALL DATA untuk konfirmasi.",
     ROBLOX_CONNECT_DISABLED: "Hubungkan dengan Roblox belum tersedia — tambahkan API key Open Cloud.",
     ROBLOX_DENIED: "Otorisasi Roblox dibatalkan.",
     OAUTH_STATE: "Tautan masuk kedaluwarsa. Coba lagi.",
@@ -476,6 +485,11 @@ const id: FeaturesDict = {
     system: { dbMs: "Latensi database", database: "Database", queue: "Antrean", worker: "Worker", robloxOAuth: "OAuth Roblox", qrisConfigured: "Gambar QRIS", node: "Node.js", uptimeSec: "Uptime (dtk)", memoryMb: "Memori (MB)" },
     approved: "Order disetujui — paket aktif",
     rejected: "Order ditolak",
+    danger: "Zona bahaya",
+    resetTitle: "Reset semua data",
+    resetBody: "Menghapus semua user (kecuali admin), workspace, koneksi, project, migrasi, dan order. Akun admin dipertahankan dengan workspace Enterprise baru. Tidak bisa dibatalkan.",
+    resetButton: "Reset semua data",
+    resetDone: "Semua data sudah direset",
   },
   nav: { billing: "Tagihan", admin: "Admin" },
 };

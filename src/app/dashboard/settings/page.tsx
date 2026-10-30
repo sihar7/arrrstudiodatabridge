@@ -117,6 +117,8 @@ function Settings() {
         </form>
       </Section>
 
+      {/* Admin tidak pernah tertaut Roblox (hanya email + password) */}
+      {!me.user.isAdmin && (providers.roblox || me.user.roblox) && (
       <Section title={fx.roblox.linkTitle} body={fx.roblox.linkBody}>
         {me.user.roblox ? (
           <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
@@ -138,10 +140,9 @@ function Settings() {
           </div>
         ) : providers.roblox ? (
           <RobloxButton href="/api/v1/auth/roblox/start?intent=link" label={fx.roblox.link} />
-        ) : (
-          <p className="text-body-sm text-fg-3">{t.errors.ROBLOX_DISABLED}</p>
-        )}
+        ) : null}
       </Section>
+      )}
 
       <Section title={s.workspace} body={s.workspaceBody} aside={<Tag tone="green">{`${s.plan}: ${workspace.plan}`}</Tag>}>
         <form onSubmit={saveWorkspace} className="flex flex-col gap-4">
