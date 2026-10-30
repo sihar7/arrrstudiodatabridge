@@ -319,7 +319,12 @@ function ItemsTable({ id, refreshKey }: { id: string; refreshKey: string | numbe
                   <td className="px-4 py-2.5">
                     <span className="flex flex-col gap-0.5">
                       <Tag tone={it.status === "success" ? "green" : it.status === "failed" ? "danger" : it.status === "conflict" ? "warn" : "neutral"}>{m.itemStatus[it.status] ?? it.status}</Tag>
-                      {it.errorCode && <span className="text-caption text-fg-3">{m.errorCodes[it.errorCode] ?? it.errorCode}</span>}
+                      {it.errorCode && (
+                        <span className="max-w-56 truncate text-caption text-fg-3" title={it.errorMessage ?? undefined}>
+                          {m.errorCodes[it.errorCode] ?? it.errorCode}
+                          {it.errorMessage && ` · ${it.errorMessage}`}
+                        </span>
+                      )}
                     </span>
                   </td>
                   <td className="px-4 py-2.5 font-mono text-caption tracking-normal text-fg-3 tabular">{it.size != null ? `${(it.size / 1024).toFixed(1)} KB` : "—"}</td>
