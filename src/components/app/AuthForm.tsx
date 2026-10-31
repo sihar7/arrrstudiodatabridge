@@ -75,6 +75,11 @@ export function AuthForm({ mode, providers }: { mode: "login" | "register"; prov
         {error && (
           <p role="alert" className="mb-4 rounded-md border border-danger-edge bg-danger-bg px-3 py-2 text-body-sm text-danger">
             {error}
+            {oauthError === "NOT_MEMBER" && providers.discordInvite && (
+              <a href={providers.discordInvite} target="_blank" rel="noreferrer" className="mt-2 block font-semibold underline underline-offset-4">
+                {f.discord.joinServer}
+              </a>
+            )}
           </p>
         )}
         {/* User: Discord. Form email hanya untuk admin (dilipat) kecuali signup email diaktifkan */}

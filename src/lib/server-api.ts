@@ -24,8 +24,8 @@ export async function getWorkspaceCookie(): Promise<string | null> {
 }
 
 /** Penyedia login aktif (tombol Roblox hanya tampil bila app OAuth dikonfigurasi di API). */
-export type Providers = { discord: boolean; roblox: boolean; robloxConnect: boolean; emailSignup: boolean };
-const NO_PROVIDERS: Providers = { discord: false, roblox: false, robloxConnect: false, emailSignup: false };
+export type Providers = { discord: boolean; discordInvite: string | null; roblox: boolean; robloxConnect: boolean; emailSignup: boolean };
+const NO_PROVIDERS: Providers = { discord: false, discordInvite: null, roblox: false, robloxConnect: false, emailSignup: false };
 
 export async function getProviders(): Promise<Providers> {
   try {

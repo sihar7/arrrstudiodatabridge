@@ -25,6 +25,7 @@ const en = {
     DISCORD_DISABLED: "Discord sign-in isn’t configured yet.",
     DISCORD_DENIED: "Discord authorization was cancelled.",
     DISCORD_FAILED: "Discord couldn’t complete the sign-in. Try again.",
+    NOT_MEMBER: "Your Discord account hasn’t joined the ARRR Studio server yet. Join first, then sign in again.",
     EMAIL_SIGNUP_DISABLED: "Sign up with Discord.",
     INVITE_INVALID: "This invite link is invalid or was revoked.",
     INVITE_EXPIRED: "This invite link has expired.",
@@ -54,6 +55,7 @@ const en = {
     signUp: "Sign up with Discord",
     loginBody: "DataBridge accounts use Discord — no password to remember.",
     adminToggle: "Admin sign-in",
+    joinServer: "Join the ARRR Studio Discord",
   },
   links: {
     title: "Invite links",
@@ -307,6 +309,7 @@ const id: FeaturesDict = {
     DISCORD_DISABLED: "Masuk dengan Discord belum dikonfigurasi.",
     DISCORD_DENIED: "Otorisasi Discord dibatalkan.",
     DISCORD_FAILED: "Discord gagal menyelesaikan proses masuk. Coba lagi.",
+    NOT_MEMBER: "Akun Discord-mu belum bergabung ke server ARRR Studio. Gabung dulu, lalu masuk lagi.",
     EMAIL_SIGNUP_DISABLED: "Daftar dengan Discord.",
     INVITE_INVALID: "Link undangan tidak valid atau sudah dicabut.",
     INVITE_EXPIRED: "Link undangan sudah kedaluwarsa.",
@@ -336,6 +339,7 @@ const id: FeaturesDict = {
     signUp: "Daftar dengan Discord",
     loginBody: "Akun DataBridge memakai Discord — tanpa kata sandi untuk diingat.",
     adminToggle: "Masuk admin",
+    joinServer: "Gabung Discord ARRR Studio",
   },
   links: {
     title: "Link undangan",
